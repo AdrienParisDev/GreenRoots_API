@@ -34,11 +34,13 @@ model User {
   firstname   String    @db.VarChar(255)
   lastname    String    @db.VarChar(255)
   email       String    @unique @db.VarChar(320)
+  email_validated  Boolean   @default(false)
   password    String    @db.VarChar(255)
   role        Role      @default(member)
   entity_name  String?   @db.VarChar(255)
   created_at   DateTime  @default(now()) 
   updated_at  DateTime @updatedAt @db.Timestamptz(6)
+  anonymized_at DateTime? 
 
   // Relations
   user_type_id  Int      
@@ -60,12 +62,13 @@ enum Role {
 // =======================================
 model Product {
   id              Int       @id @default(autoincrement())
-  name            String    @db.VarChar(255)
+  name            String    @unique @db.VarChar(255)
   slug            String    @unique @db.VarChar(255)
   price           Decimal   @default(0.0) @db.Decimal(10, 2)
   description     String    @db.VarChar(2500)
-  image_urls      String[]  @db.VarChar(100) 
+  image_paths      String[]  @db.VarChar(100) 
   available       Boolean   @default(true)
+  best_seller     Boolean   @default(false)
   stock           Int       @default(0)
   scientific_name  String?   @db.VarChar(255) 
   carbon          Decimal?  @db.Decimal(10, 2)
@@ -125,6 +128,7 @@ model OrderItem {
   id        Int     @id @default(autoincrement())
   quantity  Int     @default(1)
   unit_price Decimal @db.Decimal(10, 2) 
+  planted_on  DateTime? 
 
   // Relations
   order_id   Int 

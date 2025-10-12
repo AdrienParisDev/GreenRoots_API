@@ -8,7 +8,7 @@ export const productDbSchema = z.object({
   slug: z.string().min(1).max(255),
   price: z.number().min(0),
   description: z.string().min(1).max(2500),
-  image_urls: z.array(z.string().max(255)).max(100),
+  image_paths: z.array(z.string().max(255)).max(100),
   available: z.boolean().default(true),
   stock: z.number().int().min(0).default(0),
   scientific_name: z.string().max(255).nullable().optional(),
@@ -25,7 +25,7 @@ export const productSchemaForCreate = productDbSchema.extend({
     (val) => (val !== "" ? toNumberWith2Decimals(val) : 0.0),
     z.number().min(0)
   ),
-  image_urls: z.preprocess((val) => {
+  image_paths: z.preprocess((val) => {
     if (typeof val === "string") {
       return val.split(",").map((s) => s.trim());
     }

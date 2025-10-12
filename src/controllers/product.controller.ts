@@ -93,7 +93,7 @@ class ProductController extends BaseController {
       );
 
       // 4. Vérification du nombre d’images
-      if (imgPath.image_urls.length > 3) {
+      if (imgPath.image_paths.length > 3) {
         return res
           .status(400)
           .json({ error: "Vous ne pouvez uploader que 3 images maximum" });
@@ -136,11 +136,11 @@ class ProductController extends BaseController {
 
       // 5) Gestion des images si de nouveaux fichiers ont été envoyés
       const files = (req.files as Express.Multer.File[]) ?? [];
-      let newImageUrls: string[] | undefined;
+      let newImagePaths: string[] | undefined;
 
       if (files.length > 0) {
         // a) supprimer les anciennes images du disque
-        for (const p of existing.image_urls ?? []) {
+        for (const p of existing.image_paths ?? []) {
           // normaliser et construire le chemin absolu
           const normalized = p.replace(/\\/g, "/");
           const fullPath = path.isAbsolute(normalized)
@@ -156,7 +156,7 @@ class ProductController extends BaseController {
         }
 
         // b) remplacer par les nouvelles (on stocke le path tel que Multer l’a écrit)
-        newImageUrls = files.map((f) => f.path.replace(/\\/g, "/"));
+        newImagePaths = files.map((f) => f.path.replace(/\\/g, "/"));
       }
 
       // 6) Construire un objet **propre** pour Prisma (pas de replace_images, etc.)
@@ -172,7 +172,7 @@ class ProductController extends BaseController {
             ? withSlug.scientific_name
             : null,
         carbon: withSlug.carbon ?? null,
-        ...(newImageUrls ? { image_urls: newImageUrls } : {}), // on ne touche pas si pas de nouvelles images
+        ...(newImagePaths ? { image_paths: newImagePaths } : {}), // on ne touche pas si pas de nouvelles images
       };
 
       // 7) Update DB
@@ -205,7 +205,7 @@ class ProductController extends BaseController {
       // 2.  Récupérer le produit existant pour accéder aux images
       const product = await prisma.product.findUnique({
         where: { id: productId },
-        select: { image_urls: true },
+        select: { image_paths: true },
       });
 
       if (!product) {
@@ -213,9 +213,9 @@ class ProductController extends BaseController {
       }
 
       // 3. Supprimer les fichiers images associés
-      if (product.image_urls?.length) {
+      if (product.image_paths?.length) {
         try {
-          await deleteFiles(product.image_urls);
+          await deleteFiles(product.image_paths);
         } catch (fileError) {
           console.error(
             "impossible de supprimer le ou les fichiers:",
@@ -233,7 +233,7 @@ class ProductController extends BaseController {
       // res.status(204).send();
       res.status(200).json({
         message: "Le produit a bien été supprimé avec ses images",
-        deletedImages: product.image_urls,
+        deletedImages: product.image_paths,
       });
     } catch (error: any) {
       console.error("Erreur Prisma deleteProduct:", error);
