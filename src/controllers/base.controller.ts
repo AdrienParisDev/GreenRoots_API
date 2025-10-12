@@ -4,7 +4,7 @@ import { ConflictError, NotFoundError } from "../lib/errors.js";
 import { Prisma } from "@prisma/client";
 import { Pagination } from "../schemas/pagination.schema.js";
 import { parseOrder } from "../utils/Parser.js";
-import { log } from "console";
+
 
 export default class BaseController {
   model: any;

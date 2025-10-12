@@ -34,10 +34,10 @@ router.get(
   productController.getAllAvailableWithPagination
 );
 
-// admin récup tous les produits meme non dispo à la vente pour crud
+// admin récup tous les produits meme non dispo à la vente pour crud 
+// (modif de Tarig, sans avertissement, logique interessante mais bloque les rupture de stock que l'on voudrait afficher en l'état, à retravailler )
 router.get(
   "/pagination/all",
-  checkRoles(["admin"]),
   productController.getAllWithPagination
 );
 
