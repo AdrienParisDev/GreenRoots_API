@@ -5,6 +5,7 @@ import userTypesRouter from "./user-type.router.js";
 import orderRouter from "./orders.router.js";
 import userRouter from "./user.router.js";
 import loggerRouter from "./logger.router.js";
+import dashboardRouter from "./dashboard.router.js" 
 
 // import { router as productsRouter } from "./products.router.js";
 import productRouter from "./product.router.js";
@@ -33,3 +34,5 @@ router.use("/orders", orderRouter); //Tarig
 router.use("/users", userRouter);
 
 router.use("/logs", loggerRouter); // Saliha
+
+router.use("/dashboard", dashboardRouter);
