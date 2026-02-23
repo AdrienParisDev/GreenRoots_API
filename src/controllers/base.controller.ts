@@ -51,6 +51,7 @@ export default class BaseController {
           skip: (page - 1) * limit,
           take: limit,
           orderBy: parseOrder(sortBy, sortOrder),
+          include: this.relations,
         }),
         this.model.count(),
       ]);

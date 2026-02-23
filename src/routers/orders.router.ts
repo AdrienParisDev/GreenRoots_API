@@ -47,6 +47,25 @@ router.get(
 // Récup toutes les commandes (admin only, back-office)
 router.get("/", checkRoles(["admin"]), orderController.getAll);
 
+// admin récup toutes les commandes avec pagination
+/**
+ * @swagger
+ * /orders/pagination/all:
+ *   get:
+ *     summary: Récupérer toutes les commandes (admin, pagination)
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste de toutes les commandes
+ */
+router.get(
+  "/pagination/all",
+  checkRoles(["admin"]),
+  orderController.getAllWithPagination
+);
+
 /**
  * @swagger
  * /users/{id}/orders:
